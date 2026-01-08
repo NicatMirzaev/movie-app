@@ -44,7 +44,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         val movies = response.body()?.results ?: emptyList()
 
                         binding.recyclerViewMovies.adapter =
-                            MovieAdapter(movies) { movie ->
+                            MovieAdapter(movies, "Add To Favourites") { movie ->
                                 lifecycleScope.launch {
                                     MovieDatabase.getDatabase(requireContext())
                                         .movieDao().insertMovie(movie)

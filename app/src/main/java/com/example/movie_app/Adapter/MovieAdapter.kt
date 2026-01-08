@@ -8,7 +8,8 @@ import com.example.movie_app.Model.Movie
 import com.example.movie_app.databinding.ItemMovieBinding
 
 class MovieAdapter(
-    private val movies: List<Movie>,
+    private var movies: List<Movie>,
+    private val buttonText: String = "Add To Favourites",
     private val onFavouriteClick: (Movie) -> Unit
 ) : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
@@ -28,6 +29,7 @@ class MovieAdapter(
         holder.binding.tvTitle.text = movie.title
         holder.binding.tvRating.text = "⭐ ${movie.vote_average}"
         holder.binding.tvOverview.text = movie.overview
+        holder.binding.btnAddFavourite.text = buttonText
 
         Glide.with(holder.itemView)
             .load("https://image.tmdb.org/t/p/w500${movie.poster_path}")
@@ -39,4 +41,9 @@ class MovieAdapter(
     }
 
     override fun getItemCount() = movies.size
+
+    fun updateMovies(newMovies: List<Movie>) {
+        this.movies = newMovies
+        notifyDataSetChanged()
+    }
 }
