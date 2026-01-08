@@ -2,13 +2,17 @@ package com.example.movie_app.UI
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.movie_app.Adapter.MovieAdapter
+import com.example.movie_app.Database.MovieDatabase
 import com.example.movie_app.Model.MovieResponse
 import com.example.movie_app.R
 import com.example.movie_app.RetrofitInstance
 import com.example.movie_app.databinding.FragmentHomeBinding
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -40,7 +44,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         val movies = response.body()?.results ?: emptyList()
 
                         binding.recyclerViewMovies.adapter =
-                            MovieAdapter(movies)
+                            MovieAdapter(movies) { movie ->
+                                lifecycleScope.launch {
+                                    MovieDatabase.getDatabase(requireContext())
+                                        .movieDao().insertMovie(movie)
+                                    Toast.makeText(requireContext(), "${movie.title} added to favourites!", Toast.LENGTH_SHORT).show()
+                                }
+                            }
 
                         binding.recyclerViewMovies.layoutManager =
                             LinearLayoutManager(requireContext())

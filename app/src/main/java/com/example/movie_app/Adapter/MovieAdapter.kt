@@ -8,7 +8,8 @@ import com.example.movie_app.Model.Movie
 import com.example.movie_app.databinding.ItemMovieBinding
 
 class MovieAdapter(
-    private val movies: List<Movie>
+    private val movies: List<Movie>,
+    private val onFavouriteClick: (Movie) -> Unit
 ) : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
     class MovieViewHolder(val binding: ItemMovieBinding)
@@ -31,6 +32,10 @@ class MovieAdapter(
         Glide.with(holder.itemView)
             .load("https://image.tmdb.org/t/p/w500${movie.poster_path}")
             .into(holder.binding.imgPoster)
+
+        holder.binding.btnAddFavourite.setOnClickListener {
+            onFavouriteClick(movie)
+        }
     }
 
     override fun getItemCount() = movies.size
